@@ -87,7 +87,7 @@ class Parameterized(object):
             feed_dict[self._cached_assign_placeholders[param]
                       ] = value.astype(dtype)
             if debug:
-                print("setting value of %s" % param.name)
+                print(("setting value of %s" % param.name))
         tf.get_default_session().run(ops, feed_dict=feed_dict)
 
     def flat_to_params(self, flattened_params, **tags):
@@ -125,7 +125,7 @@ class Model(Parameterized):
     _log_dir = './models'
 
     def load_params(self, filename, itr, skip_params):
-        print 'loading policy params...'
+        print('loading policy params...')
         if not hasattr(self, 'load_dir'):
             log_dir = Model._load_dir
         else:
@@ -137,7 +137,7 @@ class Model(Parameterized):
             if itr >= 0:
                 prefix = self._prefix(itr)
             else:
-                prefix = hf.keys()[itr] + "/"
+                prefix = list(hf.keys())[itr] + "/"
 
             for param in self.get_params():
                 path = prefix + param.name
@@ -151,10 +151,10 @@ class Model(Parameterized):
 
         sess = tf.get_default_session()
         sess.run(assignments)
-        print 'done.'
+        print('done.')
 
     def save_params(self, itr, overwrite=False):
-        print 'saving model...'
+        print('saving model...')
         if not hasattr(self, 'log_dir'):
             log_dir = Model._log_dir
         else:
@@ -174,10 +174,10 @@ class Model(Parameterized):
 
             for v, val in zip(vs, vals):
                 dset[v.name] = val
-        print 'done.'
+        print('done.')
 
     def save_extra_data(self, names, data):
-        print 'saving model...'
+        print('saving model...')
         if not hasattr(self, 'log_dir'):
             log_dir = Model._log_dir
         else:
@@ -190,7 +190,7 @@ class Model(Parameterized):
             for name, d in zip(names, data):
                 hf.create_dataset(name, data=d)
 
-        print 'done.'
+        print('done.')
 
     def set_log_dir(self, log_dir):
         self.log_dir = log_dir

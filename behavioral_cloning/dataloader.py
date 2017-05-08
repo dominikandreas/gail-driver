@@ -1,5 +1,5 @@
 import collections
-import cPickle
+import pickle
 import h5py
 import math
 import numpy as np
@@ -15,15 +15,15 @@ class DataLoader():
         self.val_frac = val_frac
         self.seq_length = seq_length
 
-        print 'validation fraction: ', self.val_frac
+        print('validation fraction: ', self.val_frac)
 
-        print "loading data..."
+        print("loading data...")
         self._load_data(extract_temporal)
 
-        print 'creating splits...'
+        print('creating splits...')
         self._create_split()
 
-        print 'shifting/scaling data...'
+        print('shifting/scaling data...')
         self._shift_scale(extract_temporal)
 
     def _trim_data(self, full_s, full_a, intervals):
@@ -36,14 +36,14 @@ class DataLoader():
 
         # Remove states that don't fit due to value of seq_length
         s = np.zeros((int(sum(lengths)), full_s.shape[1]))
-        for i in xrange(len(ret_bounds) - 1):
+        for i in range(len(ret_bounds) - 1):
             s[ret_bounds[i]:ret_bounds[i + 1]
               ] = full_s[intervals[i, 0]:intervals[i, 1]]
         s = np.reshape(s, (-1, self.seq_length, full_s.shape[1]))
 
         # Remove actions that don't fit due to value of seq_length
         a = np.zeros((int(sum(lengths)), full_a.shape[1]))
-        for i in xrange(len(ret_bounds) - 1):
+        for i in range(len(ret_bounds) - 1):
             a[ret_bounds[i]:ret_bounds[i + 1]
               ] = full_a[intervals[i, 0]:intervals[i, 1]]
         a = np.reshape(a, (-1, self.seq_length, full_a.shape[1]))
@@ -61,23 +61,23 @@ class DataLoader():
         data = h5py.File(filename, 'r')
         s = data['features'][:]
         if extract_temporal:
-            s = s[:, range(17) + range(45, 85)]
+            s = s[:, list(range(17)) + list(range(45, 85))]
         else:
-            s = s[:, range(8) + range(14, 17) + range(45, 85)]
+            s = s[:, list(range(8)) + list(range(14, 17)) + list(range(45, 85))]
         a = data['targets'][:]
         intervals = data['intervals'][:]
         data.close()
 
         cat_s, cat_a = self._trim_data(s, a, intervals)
 
-        for i in xrange(1, len(filenames)):
+        for i in range(1, len(filenames)):
             filename = data_dir + filenames[i] + data_suff
             data = h5py.File(filename, 'r')
             s = data['features'][:]
             if extract_temporal:
-                s = s[:, range(17) + range(45, 85)]
+                s = s[:, list(range(17)) + list(range(45, 85))]
             else:
-                s = s[:, range(8) + range(14, 17) + range(45, 85)]
+                s = s[:, list(range(8)) + list(range(14, 17)) + list(range(45, 85))]
             a = data['targets'][:]
             intervals = data['intervals'][:]
             data.close()
@@ -98,8 +98,8 @@ class DataLoader():
                                      self.seq_length, cat_a.shape[2]))
 
         # Print tensor shapes
-        print 'states: ', self.s.shape
-        print 'actions: ', self.a.shape
+        print('states: ', self.s.shape)
+        print('actions: ', self.a.shape)
 
         # Create batch_dict
         self.batch_dict = {}
@@ -109,7 +109,7 @@ class DataLoader():
             (self.batch_size, self.seq_length, cat_a.shape[2]))
 
         # Shuffle data
-        print 'shuffling...'
+        print('shuffling...')
         p = np.random.permutation(len(self.s))
         self.s = self.s[p]
         self.a = self.a[p]
@@ -122,8 +122,8 @@ class DataLoader():
         self.n_batches_val = int(math.floor(self.val_frac * self.n_batches))
         self.n_batches_train = self.n_batches - self.n_batches_val
 
-        print 'num training batches: ', self.n_batches_train
-        print 'num validation batches: ', self.n_batches_val
+        print('num training batches: ', self.n_batches_train)
+        print('num validation batches: ', self.n_batches_val)
 
         self.reset_batchptr_train()
         self.reset_batchptr_val()

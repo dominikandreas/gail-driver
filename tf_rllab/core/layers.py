@@ -453,7 +453,7 @@ class LatentLayer(Layer):
         super(LatentLayer, self).__init__(incoming, **kwargs)
         self.nonlinearity = tf.identity if nonlinearity is None else nonlinearity
         if nonlinearity is not None:
-            raise NotImplementedError, "Variational layers only support linear latent variables."
+            raise NotImplementedError("Variational layers only support linear latent variables.")
 
         self.num_units = num_units
 
@@ -705,8 +705,8 @@ class ConvNDLayer(BaseConvLayer):
             v: a 1-D `Tensor` (vector)
             k: a 1-D `Tensor` (kernel)
         """
-        v_n, v_h, v_w, v_c = map(lambda x: x.value, v.get_shape())
-        k_h, k_w, k_cin, k_cout = map(lambda x: x.value, k.get_shape())
+        v_n, v_h, v_w, v_c = [x.value for x in v.get_shape()]
+        k_h, k_w, k_cin, k_cout = [x.value for x in k.get_shape()]
         size = v_w
         kernel_size = k_w
         kernel_stride = kwargs["strides"][2]
@@ -727,8 +727,8 @@ class ConvNDLayer(BaseConvLayer):
                 return idx
 
         kernels = []
-        for i in xrange(size):
-            indices = [loop(i + j) for j in xrange(kernel_size -
+        for i in range(size):
+            indices = [loop(i + j) for j in range(kernel_size -
                                                    kernel_shift, -kernel_shift, -1)]
             assert len(indices) == kernel_size
             v_ = column_lookup(v, indices)

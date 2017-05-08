@@ -54,7 +54,7 @@ class Discrete(Space):
         return self.n
 
     def weighted_sample(self, weights):
-        return special.weighted_sample(weights, range(self.n))
+        return special.weighted_sample(weights, list(range(self.n)))
 
     def new_tensor_variable(self, name, extra_dims):
         # needed for safe conversion to float32

@@ -169,7 +169,7 @@ class VariantDict(AttrDict):
         self._hidden_keys = hidden_keys
 
     def dump(self):
-        return {k: v for k, v in self.items() if k not in self._hidden_keys}
+        return {k: v for k, v in list(self.items()) if k not in self._hidden_keys}
 
 
 class VariantGenerator(object):
@@ -600,12 +600,12 @@ def to_local_command(params, python_command="python", script=osp.join(config.PRO
     command = python_command + " " + script
     if use_gpu and not config.USE_TF:
         command = "THEANO_FLAGS='device=gpu,dnn.enabled=auto' " + command
-    for k, v in config.ENV.items():
+    for k, v in list(config.ENV.items()):
         command = ("%s=%s " % (k, v)) + command
 
-    for k, v in params.items():
+    for k, v in list(params.items()):
         if isinstance(v, dict):
-            for nk, nv in v.items():
+            for nk, nv in list(v.items()):
                 if str(nk) == "_name":
                     command += "  --%s %s" % (k, _to_param_val(nv))
                 else:
@@ -637,7 +637,7 @@ def to_docker_command(params, docker_image, python_command="python", script='scr
         command_prefix = "docker run"
     docker_log_dir = config.DOCKER_LOG_DIR
     if env is not None:
-        for k, v in env.items():
+        for k, v in list(env.items()):
             command_prefix += " -e \"{k}={v}\"".format(k=k, v=v)
     command_prefix += " -v {local_mujoco_key_dir}:{docker_mujoco_key_dir}".format(
         local_mujoco_key_dir=config.MUJOCO_KEY_PATH, docker_mujoco_key_dir='/root/.mujoco')
@@ -854,7 +854,7 @@ def launch_ec2(params_list, exp_prefix, docker_image, code_full_path,
         instance_args["MinCount"] = 1
         instance_args["MaxCount"] = 1
     print("************************************************************")
-    print(instance_args["UserData"])
+    print((instance_args["UserData"]))
     print("************************************************************")
     if aws_config["spot"]:
         instance_args["UserData"] = base64.b64encode(
@@ -928,8 +928,8 @@ def s3_sync_code(config, dry=False):
 
         upload_cmd = ["aws", "s3", "cp", file_path, remote_path]
 
-        print(" ".join(tar_cmd))
-        print(" ".join(upload_cmd))
+        print((" ".join(tar_cmd)))
+        print((" ".join(upload_cmd)))
 
         if not dry:
             subprocess.check_call(tar_cmd)
@@ -966,7 +966,7 @@ def s3_sync_code(config, dry=False):
             [full_path, cache_path]
         mujoco_key_cmd = [
             "aws", "s3", "sync", config.MUJOCO_KEY_PATH, "{}/.mujoco/".format(base)]
-        print(cache_cmds, cmds, caching_cmds, mujoco_key_cmd)
+        print((cache_cmds, cmds, caching_cmds, mujoco_key_cmd))
         if not dry:
             subprocess.check_call(cache_cmds)
             subprocess.check_call(cmds)
@@ -1018,7 +1018,7 @@ def to_lab_kube_pod(
 
     kube_env = [
         {"name": k, "value": v}
-        for k, v in (params.pop("env", None) or dict()).items()
+        for k, v in list((params.pop("env", None) or dict()).items())
     ]
     mkdir_p(log_dir)
     pre_commands = list()
@@ -1108,7 +1108,7 @@ def to_lab_kube_pod(
     pod_name = config.KUBE_PREFIX + params["exp_name"]
     # underscore is not allowed in pod names
     pod_name = pod_name.replace("_", "-")
-    print("Is gpu: ", is_gpu)
+    print(("Is gpu: ", is_gpu))
     if not is_gpu:
         return {
             "apiVersion": "v1",
@@ -1227,7 +1227,7 @@ def concretize(maybe_stub):
     elif isinstance(maybe_stub, dict):
         # make sure that there's no hidden caveat
         ret = dict()
-        for k, v in maybe_stub.items():
+        for k, v in list(maybe_stub.items()):
             ret[concretize(k)] = concretize(v)
         return ret
     elif isinstance(maybe_stub, (list, tuple)):

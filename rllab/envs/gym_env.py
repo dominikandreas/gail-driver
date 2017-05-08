@@ -124,7 +124,7 @@ class GymEnv(Env, Serializable):
         if self.monitoring:
             self.env._close()
             if self._log_dir is not None:
-                print("""
+                print(("""
     ***************************
 
     Training finished! You can upload results to OpenAI Gym by running the following command:
@@ -132,4 +132,4 @@ class GymEnv(Env, Serializable):
     python scripts/submit_gym.py %s
 
     ***************************
-                """ % self._log_dir)
+                """ % self._log_dir))

@@ -238,11 +238,11 @@ def save_itr_params(itr, params):
 
 def log_parameters(log_file, args, classes):
     log_params = {}
-    for param_name, param_value in args.__dict__.items():
+    for param_name, param_value in list(args.__dict__.items()):
         if any([param_name.startswith(x) for x in list(classes.keys())]):
             continue
         log_params[param_name] = param_value
-    for name, cls in classes.items():
+    for name, cls in list(classes.items()):
         if isinstance(cls, type):
             params = get_all_parameters(cls, args)
             params["_name"] = getattr(args, name)
@@ -261,7 +261,7 @@ def stub_to_json(stub_sth):
     if isinstance(stub_sth, instrument.StubObject):
         assert len(stub_sth.args) == 0
         data = dict()
-        for k, v in stub_sth.kwargs.items():
+        for k, v in list(stub_sth.kwargs.items()):
             data[k] = stub_to_json(v)
         data["_name"] = stub_sth.proxy_class.__module__ + \
             "." + stub_sth.proxy_class.__name__
@@ -283,7 +283,7 @@ def stub_to_json(stub_sth):
     elif isinstance(stub_sth, instrument.StubClass):
         return stub_sth.proxy_class.__module__ + "." + stub_sth.proxy_class.__name__
     elif isinstance(stub_sth, dict):
-        return {stub_to_json(k): stub_to_json(v) for k, v in stub_sth.items()}
+        return {stub_to_json(k): stub_to_json(v) for k, v in list(stub_sth.items())}
     elif isinstance(stub_sth, (list, tuple)):
         return list(map(stub_to_json, stub_sth))
     elif type(stub_sth) == type(lambda: None):
@@ -306,7 +306,7 @@ class MyEncoder(json.JSONEncoder):
 
 def log_parameters_lite(log_file, args):
     log_params = {}
-    for param_name, param_value in args.__dict__.items():
+    for param_name, param_value in list(args.__dict__.items()):
         log_params[param_name] = param_value
     if args.args_data is not None:
         stub_method = pickle.loads(base64.b64decode(args.args_data))

@@ -137,8 +137,8 @@ class BatchPolopt(RLAlgorithm):
                     if self.plot:
                         self.update_plot()
                         if self.pause_for_plot:
-                            input("Plotting evaluation run: Press Enter to "
-                                  "continue...")
+                            eval(input("Plotting evaluation run: Press Enter to "
+                                  "continue..."))
         self.shutdown_worker()
 
     def log_diagnostics(self, paths):

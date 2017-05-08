@@ -1,3 +1,7 @@
+import sys, os
+sys.path.insert(0, os.path.abspath(os.getcwd()))
+print(sys.path[0])
+
 import gym
 import argparse
 import calendar
@@ -193,8 +197,7 @@ gym.envs.register(
     reward_threshold=195.0,
 )
 
-expert_data, _ = rltools.util.load_trajs(
-    expert_data_path, args.limit_trajs, swap=False)
+expert_data, _ = rltools.util.load_trajs(expert_data_path, args.limit_trajs, swap=False)
 expert_data_stacked = rltools.util.prepare_trajs(expert_data['exobs_B_T_Do'], expert_data['exa_B_T_Da'], expert_data['exlen_B'],
                                                  labeller=None)
 

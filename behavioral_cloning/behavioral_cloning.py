@@ -1,5 +1,5 @@
 import argparse
-import cPickle
+import pickle
 import h5py
 import json
 import numpy as np
@@ -68,7 +68,7 @@ def main():
 
     # store config to disk
     with open(os.path.join(args.save_dir, 'config.pkl'), 'w') as f:
-        cPickle.dump(args, f)
+        pickle.dump(args, f)
 
     # Export model parameters or perform training
     if args.save_h5:
@@ -79,7 +79,7 @@ def main():
 
 def safezip(*ls):
     assert all(len(l) == len(ls[0]) for l in ls)
-    return zip(*ls)
+    return list(zip(*ls))
 
 
 def save_h5(args, net):
@@ -92,7 +92,7 @@ def save_h5(args, net):
         if len(args.ckpt_name) > 0:
             saver.restore(sess, os.path.join(args.save_dir, args.ckpt_name))
         else:
-            print 'checkpoint name not specified... exiting.'
+            print('checkpoint name not specified... exiting.')
             return
 
         vs = tf.get_collection(tf.GraphKeys.VARIABLES)
@@ -118,7 +118,7 @@ def train(args, net):
         def val_loss():
             data_loader.reset_batchptr_val()
             loss = 0.
-            for b in xrange(data_loader.n_batches_val):
+            for b in range(data_loader.n_batches_val):
 
                 # Get batch of inputs/targets
                 batch_dict = data_loader.next_batch_val()
@@ -128,7 +128,7 @@ def train(args, net):
                     hprev = net.hprev.eval()
 
                 # Now loop over all timesteps, finding loss
-                for t in xrange(args.seq_length):
+                for t in range(args.seq_length):
                     s_t, a_t = s[:, t], a[:, t]
 
                     # Construct inputs to network
@@ -162,7 +162,7 @@ def train(args, net):
         loss = 0.0
 
         # Set initial learning rate
-        print 'setting learning rate to ', args.learning_rate
+        print('setting learning rate to ', args.learning_rate)
         sess.run(tf.assign(net.learning_rate, args.learning_rate))
 
         # Set up tensorboard summary
@@ -170,11 +170,11 @@ def train(args, net):
         writer = tf.train.SummaryWriter('summaries/')
 
         # Loop over epochs
-        for e in xrange(args.num_epochs):
+        for e in range(args.num_epochs):
 
             # Evaluate loss on validation set
             score = val_loss()
-            print('Validation Loss: {0:f}'.format(score))
+            print(('Validation Loss: {0:f}'.format(score)))
 
             # Set learning rate
             if (old_score - score) < 0.01:
@@ -182,7 +182,7 @@ def train(args, net):
                 decay_epochs.append(e)
                 if len(decay_epochs) >= 3 and np.sum(np.diff(decay_epochs)[-2:]) == 2:
                     break
-                print 'setting learning rate to ', args.learning_rate * (args.decay_rate ** count_decay)
+                print('setting learning rate to ', args.learning_rate * (args.decay_rate ** count_decay))
                 sess.run(tf.assign(net.learning_rate,
                                    args.learning_rate * (args.decay_rate ** count_decay)))
             old_score = score
@@ -190,7 +190,7 @@ def train(args, net):
             data_loader.reset_batchptr_train()
 
             # Loop over batches
-            for b in xrange(data_loader.n_batches_train):
+            for b in range(data_loader.n_batches_train):
                 start = time.time()
 
                 # Get batch of inputs/targets
@@ -201,7 +201,7 @@ def train(args, net):
                     hprev = net.hprev.eval()
 
                 # Now loop over all timesteps, finding loss
-                for t in xrange(args.seq_length):
+                for t in range(args.seq_length):
                     s_t, a_t = s[:, t], a[:, t]
 
                     # Construct inputs to network
@@ -227,16 +227,16 @@ def train(args, net):
 
                 # Print loss
                 if (e * data_loader.n_batches_train + b) % 10 == 0 and b > 0:
-                    print "{}/{} (epoch {}), train_loss = {:.3f}, time/batch = {:.3f}" \
+                    print("{}/{} (epoch {}), train_loss = {:.3f}, time/batch = {:.3f}" \
                         .format(e * data_loader.n_batches_train + b,
                                 args.num_epochs * data_loader.n_batches_train,
-                                e, loss / 10. / args.seq_length, end - start)
+                                e, loss / 10. / args.seq_length, end - start))
                     loss = 0.0
 
             # Save model every epoch
             checkpoint_path = os.path.join(args.save_dir, 'bc_policy.ckpt')
             saver.save(sess, checkpoint_path, global_step=e)
-            print "model saved to {}".format(checkpoint_path)
+            print("model saved to {}".format(checkpoint_path))
 
 
 if __name__ == '__main__':

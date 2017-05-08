@@ -5,7 +5,7 @@ import random
 from gym.spaces import Box
 
 import os
-if os.environ.has_key('DISPLAY'):
+if 'DISPLAY' in os.environ:
     import matplotlib as mpl
     import matplotlib.pyplot as plt
     GRAPHICS = True
@@ -45,10 +45,10 @@ class DriveEnv_1D(DriveEnv):
         j.using("NGSIM")
         j.using("AutomotiveDrivingModels")
         j.add_module_functions("NGSIM")
-        print 'Loading NGSIM data...'
+        print('Loading NGSIM data...')
         self.trajdata = j.eval("load_trajdata(1)")
         self.ids = self.j.get_ids(self.trajdata)
-        print 'Done.'
+        print('Done.')
 
         # Graphics
         if GRAPHICS:

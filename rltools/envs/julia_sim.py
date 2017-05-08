@@ -12,9 +12,9 @@ import time
 #from path_to_Auto2D import LQG_path, auto1D_path, auto2D_path, pulltraces_path, passive_aggressive_path
 from rllab.config_personal import auto2D_path
 
-from drive import DriveEnv_1D
+from rltools.envs.drive import DriveEnv_1D
 
-if os.environ.has_key('DISPLAY'):
+if "DISPLAY" in os.environ:
     import matplotlib as mpl
     import matplotlib.pyplot as plt
     GX = True
@@ -226,7 +226,7 @@ class JuliaDriveEnv2D():
         #self.j.set_TRAJDATAS(tj_ix= tj_ix)
         #self.simparams = self.j.gen_simparams([1])
         if trajdata_indeces == []:
-            print "USING PASSIVE/AGGRESSIVE"
+            print("USING PASSIVE/AGGRESSIVE")
 
             def append_path(x): return pulltraces_path + x
             trajdatas = ["trajdata_passive_aggressive1.txt",
@@ -238,7 +238,7 @@ class JuliaDriveEnv2D():
             # weights[0], weights[1], weights[2], weights[3], weights[4],
             # weights[5])
             self.simparams = self.j.gen_simparams_from_trajdatas(
-                map(append_path, trajdatas), map(append_path, roadways))
+                list(map(append_path, trajdatas)), list(map(append_path, roadways)))
 
         else:
             #self.simparams = self.j.gen_simparams(trajdata_indeces, weights[0], weights[1], weights[2], weights[3], weights[4], weights[5])

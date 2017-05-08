@@ -47,7 +47,7 @@ class PolicyNetwork():
         output = args.mlp_activation(tf.nn.xw_plus_b(self.inputs, W, b))
 
         # Hidden layers
-        for i in xrange(1, len(args.mlp_size)):
+        for i in range(1, len(args.mlp_size)):
             W = tf.get_variable("mlp_policy/hidden_" + str(i) + "/W",
                                 [args.mlp_size[i - 1], args.mlp_size[i]], initializer=initializers.xavier_initializer())
             b = tf.get_variable("mlp_policy/hidden_" + str(i) + "/b",
@@ -150,4 +150,4 @@ class PolicyNetwork():
         grads, _ = tf.clip_by_global_norm(
             tf.gradients(self.cost, tvars), args.grad_clip)
         optimizer = tf.train.AdamOptimizer(self.learning_rate)
-        self.train = optimizer.apply_gradients(zip(grads, tvars))
+        self.train = optimizer.apply_gradients(list(zip(grads, tvars)))

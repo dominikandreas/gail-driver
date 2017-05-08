@@ -66,7 +66,7 @@ act_B_T_Das = []
 len_Bs = []
 
 #feat_ix = map(lambda x : x - 1, [1,8,14,17,45,65,85,125])
-feat_ix = map(lambda x: x, [0, 8, 14, 17, 45, 65, 85, 125])
+feat_ix = [x for x in [0, 8, 14, 17, 45, 65, 85, 125]]
 # parser.add_argument('--extract_core',type=bool,default=False)
 # parser.add_argument('--extract_temporal',type=bool,default=False)
 # parser.add_argument('--extract_well_behaved',type=bool,default=False)
@@ -75,13 +75,13 @@ feat_ix = map(lambda x: x, [0, 8, 14, 17, 45, 65, 85, 125])
 # parser.add_argument('--extract_roadlidar',type=bool,default=False)
 # parser.add_argument('--extract_carlidar_rangerate',type=bool,default=False)
 
-core_ixs = range(feat_ix[0], feat_ix[1])
-temp_ixs = range(feat_ix[1], feat_ix[2])
-well_ixs = range(feat_ix[2], feat_ix[3])
-neig_ixs = range(feat_ix[3], feat_ix[4])
-carl_ixs = range(feat_ix[4], feat_ix[5])
-clrr_ixs = range(feat_ix[5], feat_ix[6])
-roal_ixs = range(feat_ix[6], feat_ix[7])
+core_ixs = list(range(feat_ix[0], feat_ix[1]))
+temp_ixs = list(range(feat_ix[1], feat_ix[2]))
+well_ixs = list(range(feat_ix[2], feat_ix[3]))
+neig_ixs = list(range(feat_ix[3], feat_ix[4]))
+carl_ixs = list(range(feat_ix[4], feat_ix[5]))
+clrr_ixs = list(range(feat_ix[5], feat_ix[6]))
+roal_ixs = list(range(feat_ix[6], feat_ix[7]))
 
 get_ixs = []
 if args.extract_core:
@@ -139,8 +139,8 @@ for i, filename in enumerate(filenames):
         #train_traj_ixs = traj_ixs[f_tran_train_assign]
 
         # sample one subtrajectory each.
-        print("Training trajs in %s : %i" % (filename, len(train_lens)))
-        start_ixs = np.array(map(np.random.randint, train_lens - MAX_TRAJ_LEN))
+        print(("Training trajs in %s : %i" % (filename, len(train_lens))))
+        start_ixs = np.array(list(map(np.random.randint, train_lens - MAX_TRAJ_LEN)))
         s_train_trajs_obs = [traj[start_ix:start_ix + MAX_TRAJ_LEN][None, ...]
                              for start_ix, traj in zip(start_ixs, train_trajs_obs)]
         s_train_trajs_act = [traj[start_ix:start_ix + MAX_TRAJ_LEN][None, ...]

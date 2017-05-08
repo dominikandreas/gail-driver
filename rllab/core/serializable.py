@@ -32,7 +32,7 @@ class Serializable(object):
         # convert all __args to keyword-based arguments
         in_order_args = inspect.getargspec(self.__init__).args[1:]
         out = type(self)(
-            **dict(zip(in_order_args, d["__args"]), **d["__kwargs"]))
+            **dict(list(zip(in_order_args, d["__args"])), **d["__kwargs"]))
         self.__dict__.update(out.__dict__)
 
     @classmethod

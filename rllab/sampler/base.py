@@ -67,7 +67,7 @@ class BaseSampler(Sampler):
                 path["rewards"], self.algo.discount)
             baselines.append(path_baselines[:-1])
             returns.append(path["returns"])
-            if path.has_key("env_rewards"):
+            if "env_rewards" in path:
                 path["env_returns"] = special.discount_cumsum(
                     path["env_rewards"], self.algo.discount)
                 env_returns.append(path["env_returns"])
@@ -94,7 +94,7 @@ class BaseSampler(Sampler):
                 [path["agent_infos"] for path in paths])
 
             env_returns = [path["env_rewards"]
-                           for path in paths if path.has_key("env_rewards")]
+                           for path in paths if "env_rewards" in path]
 
             if self.algo.center_adv:
                 advantages = util.center_advantages(advantages)
@@ -107,11 +107,11 @@ class BaseSampler(Sampler):
 
             average_discounted_env_return = \
                 np.mean([path["env_returns"][0]
-                         for path in paths if path.has_key("env_returns")])  # why zero?
+                         for path in paths if "env_returns" in path])  # why zero?
 
             undiscounted_returns = [sum(path["rewards"]) for path in paths]
             undiscounted_env_returns = [
-                sum(path["env_rewards"]) for path in paths if path.has_key("env_rewards")]
+                sum(path["env_rewards"]) for path in paths if "env_rewards" in path]
 
             ent = np.mean(self.algo.policy.distribution.entropy(agent_infos))
 
@@ -155,7 +155,7 @@ class BaseSampler(Sampler):
             returns = tensor_utils.pad_tensor_n(returns, max_path_length)
 
             env_returns = [path["env_rewards"]
-                           for path in paths if path.has_key("env_rewards")]
+                           for path in paths if "env_rewards" in path]
             env_returns = tensor_utils.pad_tensor_n(
                 env_returns, max_path_length)
 
@@ -182,7 +182,7 @@ class BaseSampler(Sampler):
 
             undiscounted_returns = [sum(path["rewards"]) for path in paths]
             undiscounted_env_returns = [
-                sum(path["env_rewards"]) for path in paths if path.has_key("env_rewards")]
+                sum(path["env_rewards"]) for path in paths if "env_rewards" in path]
 
             ent = np.sum(self.algo.policy.distribution.entropy(
                 agent_infos) * valids) / np.sum(valids)

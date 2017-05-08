@@ -10,7 +10,7 @@ import re
 
 
 if python_version_tuple()[0] < "3":
-    from itertools import izip_longest
+    from itertools import zip_longest
     from functools import partial
     _none_type = type(None)
     _int_type = int
@@ -307,7 +307,7 @@ def _afterpoint(string):
 def _padleft(width, s, has_invisible=True):
     """Flush right.
 
-    >>> _padleft(6, '\u044f\u0439\u0446\u0430') == '  \u044f\u0439\u0446\u0430'
+    >>> _padleft(6, '\\u044f\\u0439\\u0446\\u0430') == '  \\u044f\\u0439\\u0446\\u0430'
     True
 
     """
@@ -320,7 +320,7 @@ def _padleft(width, s, has_invisible=True):
 def _padright(width, s, has_invisible=True):
     """Flush left.
 
-    >>> _padright(6, '\u044f\u0439\u0446\u0430') == '\u044f\u0439\u0446\u0430  '
+    >>> _padright(6, '\\u044f\\u0439\\u0446\\u0430') == '\\u044f\\u0439\\u0446\\u0430  '
     True
 
     """
@@ -333,7 +333,7 @@ def _padright(width, s, has_invisible=True):
 def _padboth(width, s, has_invisible=True):
     """Center string.
 
-    >>> _padboth(6, '\u044f\u0439\u0446\u0430') == ' \u044f\u0439\u0446\u0430 '
+    >>> _padboth(6, '\\u044f\\u0439\\u0446\\u0430') == ' \\u044f\\u0439\\u0446\\u0430 '
     True
 
     """
@@ -419,7 +419,7 @@ def _column_type(strings, has_invisible=True):
     True
     >>> _column_type(["1", "2.3", "four"]) is _text_type
     True
-    >>> _column_type(["four", '\u043f\u044f\u0442\u044c']) is _text_type
+    >>> _column_type(["four", '\\u043f\\u044f\\u0442\\u044c']) is _text_type
     True
     >>> _column_type([None, "brux"]) is _text_type
     True
@@ -439,8 +439,8 @@ def _format(val, valtype, floatfmt, missingval=""):
 
     Unicode is supported:
 
-    >>> hrow = ['\u0431\u0443\u043a\u0432\u0430', '\u0446\u0438\u0444\u0440\u0430'] ; \
-        tbl = [['\u0430\u0437', 2], ['\u0431\u0443\u043a\u0438', 4]] ; \
+    >>> hrow = ['\\u0431\\u0443\\u043a\\u0432\\u0430', '\\u0446\\u0438\\u0444\\u0440\\u0430'] ; \
+        tbl = [['\\u0430\\u0437', 2], ['\\u0431\\u0443\\u043a\\u0438', 4]] ; \
         good_result = '\\u0431\\u0443\\u043a\\u0432\\u0430      \\u0446\\u0438\\u0444\\u0440\\u0430\\n-------  -------\\n\\u0430\\u0437             2\\n\\u0431\\u0443\\u043a\\u0438           4' ; \
         tabulate(tbl, headers=hrow) == good_result
     True

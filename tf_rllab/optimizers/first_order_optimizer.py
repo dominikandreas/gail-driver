@@ -89,12 +89,12 @@ class FirstOrderOptimizer(Serializable):
                 inputs + extra_inputs, loss),
         )
 
-        if kwargs.has_key('like_loss'):
+        if 'like_loss' in kwargs:
             def l_loss(): return tensor_utils.compile_function(
                 inputs + extra_inputs, kwargs['like_loss'])
             self._opt_fun.set('l_loss', l_loss)
 
-        if kwargs.has_key('cmpx_loss'):
+        if 'cmpx_loss' in kwargs:
             def c_loss(): return tensor_utils.compile_function(
                 inputs + extra_inputs, kwargs['cmpx_loss'])
             self._opt_fun.set('c_loss', c_loss)
