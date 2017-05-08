@@ -21,11 +21,11 @@ An ego vehicle trained through Generative Adversarial Imitation Learning (blue) 
 
 # Requirements
 - python:
- - execute `pip install -r requirements.txt` in the root folder
+  - execute `pip install -r requirements.txt` in the root folder
 
 - julia:
- - [AutomotiveDrivingModels.jl](https://github.com/tawheeler/AutomotiveDrivingModels.jl)
- - ForwardNets.jl ([nextgen branch](https://github.com/tawheeler/ForwardNets.jl/tree/nextgen))
+  - [AutomotiveDrivingModels.jl](https://github.com/tawheeler/AutomotiveDrivingModels.jl)
+  - ForwardNets.jl ([nextgen branch](https://github.com/tawheeler/ForwardNets.jl/tree/nextgen))
 
  - to install enter the following in a julia bash:
 ```julia
