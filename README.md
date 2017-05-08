@@ -26,13 +26,12 @@ An ego vehicle trained through Generative Adversarial Imitation Learning (blue) 
 - julia:
   - [AutomotiveDrivingModels.jl](https://github.com/tawheeler/AutomotiveDrivingModels.jl)
   - ForwardNets.jl ([nextgen branch](https://github.com/tawheeler/ForwardNets.jl/tree/nextgen))
-
- - to install enter the following in a julia bash:
-```julia
-Pkg.clone("https://github.com/tawheeler/AutomotiveDrivingModels.jl.git")
-Pkg.clone("https://github.com/tawheeler/ForwardNets.jl.git", "ForwardNets")
-Pkg.checkout("ForwardNets", "nextgen")
-```
+  - to install enter the following in a julia bash:
+    ```julia
+    Pkg.clone("https://github.com/tawheeler/AutomotiveDrivingModels.jl.git")
+    Pkg.clone("https://github.com/tawheeler/ForwardNets.jl.git", "ForwardNets")
+    Pkg.checkout("ForwardNets", "nextgen")
+    ```
 
 
 # References
